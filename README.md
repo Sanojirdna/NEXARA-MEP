@@ -14,7 +14,7 @@ Das Werkzeug liest IFC-Modelle, ermittelt Raumbedarfe aus Excel-Raumlisten, plan
 
 | | |
 |---|---|
-| **Titel** | Automatisierte Generierung von HLKS-Platzbedarfe auf Basis von BIM-Volumenmodellen in frühen Planungsphasen |
+| **Titel** | Automatisierte Generierung von HLKS-Platzbedarfen auf Basis von BIM-Volumenmodellen in frühen Planungsphasen |
 | **Title** | Automated Generation of MEP Space Requirements Based on BIM Volume Models in Early Design Phases |
 | **Autor** | Jonas Andri Weiss |
 | **Hochschule** | Hochschule Luzern – Technik & Architektur |
@@ -22,6 +22,7 @@ Das Werkzeug liest IFC-Modelle, ermittelt Raumbedarfe aus Excel-Raumlisten, plan
 | **Semester** | FS26 (2026) |
 | **Betreuer** | Dipl.-Ing. Michal Rontsinsky |
 | **Experte** | Martin Loucka |
+| **Industriepartner** | [Penzel Valier AG, Zürich](https://www.penzelvalier.ch) |
 
 ---
 
