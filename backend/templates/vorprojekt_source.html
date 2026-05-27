@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEXARA — Vorprojekt</title>
+  <link rel="icon" type="image/svg+xml" href="/static/nexara-favicon.svg">
+
+  <link rel="stylesheet" href="/vorprojekt_src/style.css">
+  <link href="https://db.onlinewebfonts.com/c/de8b5411e430987a61cf631a38ddbd3f?family=DIN+Offc+W06+Extlight" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "/vorprojekt_modules/three/build/three.module.js",
+        "three/webgpu": "/vorprojekt_modules/three/build/three.webgpu.js",
+        "three/tsl": "/vorprojekt_modules/three/build/three.tsl.js",
+        "three/addons/": "/vorprojekt_modules/three/examples/jsm/",
+        "three/examples/jsm/": "/vorprojekt_modules/three/examples/jsm/",
+        "@thatopen/components": "/vorprojekt_modules/@thatopen/components/dist/index.mjs",
+        "@thatopen/components-front": "/vorprojekt_modules/@thatopen/components-front/dist/index.js",
+        "@thatopen/fragments": "/vorprojekt_modules/@thatopen/fragments/dist/index.mjs",
+        "camera-controls": "/vorprojekt_modules/camera-controls/dist/camera-controls.module.js",
+        "web-ifc": "/vorprojekt_modules/web-ifc/web-ifc-api.js",
+        "@thatopen/ui": "/vorprojekt_modules/@thatopen/ui/dist/index.js"
+      }
+    }
+  </script>
+
+  <script type="module" src="/vorprojekt_src/main.js"></script>
+</body>
+</html>

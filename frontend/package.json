@@ -1,0 +1,22 @@
+{
+  "name": "pipe-planner-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@thatopen/components": "3.4.2",
+    "@thatopen/components-front": "3.4.2",
+    "@thatopen/fragments": "3.4.0",
+    "@thatopen/ui": "^3.4.0",
+    "three": "0.182.0",
+    "web-ifc": "0.0.77"
+  },
+  "devDependencies": {
+    "vite": "6.2.0"
+  }
+}

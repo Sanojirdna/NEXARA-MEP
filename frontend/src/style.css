@@ -1,0 +1,3 @@
+/* Single source of truth: backend/static/style.css
+   Vite inlines this import during build. */
+@import '/static/style.css';

@@ -1,0 +1,166 @@
+{
+  "config_version": 1,
+  "name": "default",
+  "voxel_grid": {
+    "voxel_size": 0.5,
+    "voxel_margin": 1.0,
+    "route_clearance_margin": 0.1
+  },
+  "runtime": {
+    "default_workers": 4,
+    "candidate_shaft_limit": 4,
+    "k_routes_per_strategy": 5,
+    "penalty_factor": 3.0
+  },
+  "keywords": {
+    "corridor_keywords": [
+      "korridor",
+      "corridor",
+      "flur",
+      "gang"
+    ],
+    "shaft_keywords": [
+      "schacht",
+      "shaft",
+      "riser"
+    ],
+    "no_route_space_keywords": [
+      "treppenhaus",
+      "stair",
+      "stairs",
+      "staircase",
+      "lift",
+      "elevator",
+      "aufzug"
+    ],
+    "technical_room_keywords": [
+      "technikzentrale",
+      "zentrale",
+      "technik"
+    ],
+    "technical_room_sanitary_keywords": [
+      "sanit",
+      "trinkwasser",
+      "abwasser",
+      "wasser",
+      "fettabscheider"
+    ],
+    "technical_room_heating_keywords": [
+      "heiz",
+      "wärme",
+      "waerme",
+      "fernwärme",
+      "fernwaerme"
+    ],
+    "technical_room_ventilation_keywords": [
+      "rlt",
+      "lüft",
+      "lueft",
+      "vent",
+      "klima",
+      "ahu"
+    ],
+    "technical_room_cooling_keywords": [
+      "kälte",
+      "kaelte",
+      "kühl",
+      "kuehl",
+      "cool",
+      "chiller"
+    ],
+    "technical_room_sprinkler_keywords": [
+      "sprinkler",
+      "lösch",
+      "loesch",
+      "feuerlösch"
+    ]
+  },
+  "penalties": {
+    "wall_cross_penalty": 8.0,
+    "slab_cross_penalty": 1000.0,
+    "blocked_penalty": 1000000.0,
+    "wall_distance_clip": 6,
+    "corridor_distance_clip": 10
+  },
+  "shaft_allow_map": {},
+  "strategies": {
+    "Shortest": {
+      "name": "Shortest",
+      "length_weight": 1.0,
+      "bend_penalty": 0.3,
+      "vertical_penalty": 0.8,
+      "wall_cross_penalty": 8.0,
+      "slab_cross_penalty": 1000.0,
+      "wall_distance_weight": 0.1,
+      "ceiling_weight": 0.1,
+      "corridor_center_weight": 0.1,
+      "merge_reward": 0.3,
+      "ignore_wall_penalty": false
+    },
+    "WallCeiling": {
+      "name": "WallCeiling",
+      "length_weight": 1.0,
+      "bend_penalty": 0.4,
+      "vertical_penalty": 0.8,
+      "wall_cross_penalty": 8.0,
+      "slab_cross_penalty": 1000.0,
+      "wall_distance_weight": 0.8,
+      "ceiling_weight": 0.6,
+      "corridor_center_weight": 0.2,
+      "merge_reward": 0.4,
+      "ignore_wall_penalty": false
+    },
+    "CorridorMerge": {
+      "name": "CorridorMerge",
+      "length_weight": 1.1,
+      "bend_penalty": 0.5,
+      "vertical_penalty": 1.0,
+      "wall_cross_penalty": 8.0,
+      "slab_cross_penalty": 1000.0,
+      "wall_distance_weight": 0.4,
+      "ceiling_weight": 0.4,
+      "corridor_center_weight": 1.1,
+      "merge_reward": 1.8,
+      "ignore_wall_penalty": false
+    },
+    "LowPenetration": {
+      "name": "LowPenetration",
+      "length_weight": 1.0,
+      "bend_penalty": 0.7,
+      "vertical_penalty": 0.9,
+      "wall_cross_penalty": 20.0,
+      "slab_cross_penalty": 1000.0,
+      "wall_distance_weight": 0.6,
+      "ceiling_weight": 0.4,
+      "corridor_center_weight": 0.4,
+      "merge_reward": 0.4,
+      "ignore_wall_penalty": false
+    },
+    "Balanced": {
+      "name": "Balanced",
+      "length_weight": 1.0,
+      "bend_penalty": 0.5,
+      "vertical_penalty": 0.9,
+      "wall_cross_penalty": 10.0,
+      "slab_cross_penalty": 1000.0,
+      "wall_distance_weight": 0.5,
+      "ceiling_weight": 0.5,
+      "corridor_center_weight": 0.5,
+      "merge_reward": 0.8,
+      "ignore_wall_penalty": false
+    },
+    "IgnoreWallPenalty": {
+      "name": "IgnoreWallPenalty",
+      "length_weight": 1.0,
+      "bend_penalty": 0.4,
+      "vertical_penalty": 0.8,
+      "wall_cross_penalty": 0.0,
+      "slab_cross_penalty": 1000.0,
+      "wall_distance_weight": 0.2,
+      "ceiling_weight": 0.3,
+      "corridor_center_weight": 0.3,
+      "merge_reward": 0.6,
+      "ignore_wall_penalty": true
+    }
+  }
+}

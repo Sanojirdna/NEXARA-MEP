@@ -1,0 +1,1111 @@
+/* ============================================================
+   NEXARA — Design System  UI3 Grau — DIN Offc W06 Extlight
+   ============================================================ */
+@import url('https://db.onlinewebfonts.com/c/de8b5411e430987a61cf631a38ddbd3f?family=DIN+Offc+W06+Extlight');
+
+:root {
+  --bg:#E8E8E8; --surface:#F2F2F2; --surface-2:#FAFAFA;
+  --border:#CECECE; --border-hi:#111111;
+  --text:#111111; --muted:#888888; --hint:#BBBBBB;
+  --brand:#0B7A6A; --brand-dim:rgba(11,122,106,0.07);
+  --hei:#D9541A; --lue:#006FA8; --san:#B82468;
+  --ok:#2E7D32; --warn:#E65100; --danger:#B71C1C;
+  --space:16px; --radius:0px;
+  --panel-shadow:none; --soft-shadow:none;
+  --color-primary:#111111; --color-secondary:#888888;
+  --color-tertiary:#0B7A6A; --color-surface:#E8E8E8;
+  --color-panel:#FAFAFA; --color-border:#CECECE;
+  --color-text:#111111; --color-muted:#888888;
+  --color-danger:#B71C1C; --color-warn:#E65100; --color-ok:#2E7D32;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  font-family:"DIN Offc W06 Extlight","DIN Alternate","Helvetica Neue",Arial,sans-serif;
+  font-size:13px; color:var(--text); background:var(--bg);
+  line-height:1.55; letter-spacing:0.015em;
+}
+
+html:has(.app-shell),body:has(.app-shell){height:100%;overflow:hidden}
+body:has(.app-shell) #app{height:100%;overflow:hidden}
+
+a{color:var(--text)}
+code{background:var(--border);padding:2px 5px;font-size:12px;font-family:"Courier New",monospace}
+pre{background:var(--surface);border:1px solid var(--border);padding:12px;overflow-x:auto}
+
+.page{max-width:1400px;margin:0 auto;padding:0 16px 48px;display:grid;gap:var(--space)}
+
+.hero{display:grid;gap:8px;margin-bottom:8px}
+.hero h1{margin:0;font-size:26px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase}
+.hero p{margin:0;color:var(--muted)}
+
+.grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:var(--space)}
+.layout{display:grid;grid-template-columns:360px 1fr;gap:var(--space);align-items:start}
+
+.card{background:var(--surface-2);border:1px solid var(--border);padding:16px}
+.stack{display:grid;gap:12px}
+
+/* ============================================================
+   PAGE HEADER  — shared by studie, landing, and any non-app-shell page
+   Matches the app-shell header visual language exactly.
+   ============================================================ */
+.page-header{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:0 20px;
+  height:clamp(42px, 5.5dvh, 52px);
+  background:var(--surface-2);border-bottom:2px solid var(--border-hi);
+  overflow:hidden;min-width:0;
+  position:sticky;top:0;z-index:10;
+}
+/* For scrollable pages — keep header pinned */
+.page-header + * { margin-top: 0; }
+
+.page-header .header-brand{display:flex;align-items:center;gap:10px;min-width:0;flex-shrink:0}
+.page-header .nexara-logo{height:clamp(22px, 3.5dvh, 34px);width:auto;display:block;flex-shrink:0}
+.page-header .header-brand-text{display:flex;flex-direction:column;justify-content:center;gap:1px}
+.page-header .app-title{font-size:clamp(9px,0.9vw,12px);font-weight:400;letter-spacing:0.22em;text-transform:uppercase;color:var(--text);white-space:nowrap}
+.page-header .app-subtitle{font-size:clamp(8px,0.7vw,10px);color:var(--muted);letter-spacing:0.06em;white-space:nowrap}
+.page-header .header-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.page-header .header-actions a,.page-header .header-actions button{
+  text-decoration:none;padding:4px 10px;background:transparent;color:var(--text);
+  cursor:pointer;border:1px solid var(--border);font-family:inherit;
+  font-size:9px;letter-spacing:0.1em;text-transform:uppercase;border-radius:0;white-space:nowrap
+}
+.page-header .header-actions a:hover,.page-header .header-actions button:hover{background:var(--bg)}
+.page-header .header-actions button#autofill-button{background:var(--text);color:var(--surface-2);border-color:var(--text)}
+.page-header .header-actions button#autofill-button:hover{background:#333;border-color:#333}
+
+/* Legacy topbar — kept for any page that still uses it, but page-header is preferred */
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.topbar a,.topbar button{
+  text-decoration:none;padding:7px 12px;background:transparent;color:var(--text);
+  cursor:pointer;border:1px solid var(--border);font-family:inherit;
+  font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:0
+}
+.topbar a:hover,.topbar button:hover{background:var(--bg)}
+
+.title{font-size:22px;font-weight:400;letter-spacing:0.06em;text-transform:uppercase}
+.small{font-size:12px;line-height:1.45}
+.muted{color:var(--muted)}
+.note{font-size:11px;color:var(--muted)}
+
+label{display:grid;gap:4px;font-size:10px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
+
+input[type="file"],input[type="number"],input[type="text"],select{
+  width:100%;padding:6px 8px;border:1px solid var(--border);
+  background:var(--surface-2);color:var(--text);font-family:inherit;
+  font-size:12px;border-radius:0;outline:none
+}
+/* Sidebar & inspector use tighter inputs */
+.sidebar input,.sidebar select,.inspector input,.inspector select{
+  padding:5px 7px;font-size:11px
+}
+input:focus,select:focus{border-color:var(--text)}
+select.weight-select{padding:5px 8px}
+
+button{
+  border:1px solid var(--text);padding:7px 14px;background:var(--text);
+  color:var(--surface-2);cursor:pointer;font-family:inherit;font-size:10px;
+  letter-spacing:0.12em;text-transform:uppercase;border-radius:0;transition:background 0.1s
+}
+button:hover{background:#333;border-color:#333}
+button:disabled{opacity:0.38;cursor:not-allowed}
+button.secondary{background:transparent;color:var(--text);border-color:var(--border)}
+button.secondary:hover{background:var(--bg)}
+/* Compact buttons in side panels */
+.sidebar button:not(.panel-collapse-button):not(.tab-button),
+.inspector button:not(.panel-collapse-button){padding:5px 10px;font-size:9px}
+button.danger{background:var(--danger);border-color:var(--danger);color:#fff}
+button.danger:hover{background:#8B0000;border-color:#8B0000}
+
+.button-row{display:flex;gap:6px;flex-wrap:wrap}
+.button-row button,.button-row a{
+  border:1px solid var(--text);padding:7px 14px;background:var(--text);color:var(--surface-2);
+  cursor:pointer;text-decoration:none;font-family:inherit;font-size:10px;
+  letter-spacing:0.12em;text-transform:uppercase;border-radius:0
+}
+.button-row button:hover,.button-row a:hover{background:#333}
+.button-row button.secondary,.button-row a.secondary{background:transparent;color:var(--text);border-color:var(--border)}
+.button-row button.secondary:hover,.button-row a.secondary:hover{background:var(--bg)}
+
+.nav-link{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 16px;background:var(--text);color:var(--surface-2);
+  text-decoration:none;font-size:10px;letter-spacing:0.12em;text-transform:uppercase
+}
+.nav-link:hover{background:#333;color:#fff}
+.nav-link.secondary{background:transparent;color:var(--text);border:1px solid var(--border)}
+.nav-link.secondary:hover{background:var(--bg)}
+
+.status{padding:9px 11px;background:var(--bg);border:1px solid var(--border);color:var(--text);min-height:40px;font-size:12px}
+
+.info-list{display:grid;gap:0}
+.info-item{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px}
+.info-item:last-child{border-bottom:none}
+
+.status-pill{
+  display:inline-flex;align-items:center;gap:5px;padding:4px 10px;
+  font-size:10px;letter-spacing:0.1em;text-transform:uppercase;
+  background:transparent;border:1px solid var(--border);color:var(--muted)
+}
+
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.metric{border:1px solid var(--border);padding:10px;background:var(--bg)}
+.metric-label{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.metric-value{font-size:20px;font-weight:400}
+.metric-value-small{font-size:15px}
+
+.summary-list{display:grid;gap:5px}
+.summary-item{border:1px solid var(--border);padding:8px 10px;background:var(--bg)}
+
+table{width:100%;border-collapse:collapse;table-layout:fixed;background:var(--surface-2)}
+td{border:1px solid var(--border);padding:5px 8px;vertical-align:middle;word-break:break-word;font-size:12px}
+.header{background:var(--bg);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
+.section{background:var(--surface)}
+.sum{background:var(--bg)}
+.pickable{cursor:pointer;transition:background 0.1s}
+.pickable:hover{background:var(--bg)}
+.pickable.selected{background:var(--brand-dim);outline:1px solid var(--brand)}
+.match-true{color:var(--ok)}
+.match-false{color:var(--danger)}
+
+.tab-strip{display:flex;gap:0}
+.tab-button{
+  background:transparent;color:var(--muted);border:1px solid var(--border);
+  border-radius:0;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px
+}
+.tab-button+.tab-button{margin-left:-1px}
+.tab-button.active{background:var(--text);color:var(--surface-2);border-color:var(--text)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.table-scroll{overflow:auto;max-height:82vh}
+
+.status-badge{display:inline-flex;align-items:center;padding:3px 8px;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;border:1px solid transparent}
+.status-within{color:var(--ok);border-color:rgba(46,125,50,0.3)}
+.status-below{color:var(--warn);border-color:rgba(230,81,0,0.3)}
+.status-above{color:var(--danger);border-color:rgba(183,28,28,0.3)}
+
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+@media(max-width:1100px){.layout{grid-template-columns:1fr}}
+
+/* ============================================================
+   NEXARA APP SHELL  — dynamic, no-scroll layout
+   ============================================================ */
+
+/* Fluid layout tokens — adapt to any screen size */
+.app-shell{
+  --header-h: clamp(42px, 5.5dvh, 52px);
+  --bottom-h: clamp(190px, 27dvh, 340px);
+  --sidebar-width: clamp(210px, 17.5vw, 310px);
+  --inspector-width: clamp(230px, 19vw, 330px);
+  --kpi-col-w: clamp(150px, 13vw, 210px);
+  display:grid;
+  grid-template-rows: var(--header-h) minmax(0,1fr) var(--bottom-h);
+  grid-template-columns: var(--sidebar-width) minmax(0,1fr) var(--inspector-width);
+  grid-template-areas:"header header header" "sidebar viewer inspector" "bottom bottom bottom";
+  height:100dvh; overflow:hidden;
+  gap:1px; background:var(--border); padding:0
+}
+
+.app-shell .header,
+.inspector,.sidebar,.viewer-panel,.bottom-panel{border-radius:0;box-shadow:none}
+
+/* Header — compact, always one row */
+.app-shell .header{
+  grid-area:header; display:flex; align-items:center; justify-content:space-between;
+  gap:12px; padding:0 14px; background:var(--surface-2); border-bottom:2px solid var(--border-hi);
+  overflow:hidden; min-width:0;
+}
+.header-brand{display:flex;align-items:center;gap:10px;min-width:0;flex-shrink:0}
+.nexara-logo{
+  height: clamp(22px, 3.5dvh, 34px);
+  width:auto; display:block; flex-shrink:0;
+}
+.header-brand-text{display:flex;flex-direction:column;justify-content:center;gap:1px;min-width:0}
+.app-title{font-size:clamp(9px,0.9vw,12px);font-weight:400;letter-spacing:0.22em;text-transform:uppercase;color:var(--text);white-space:nowrap}
+.app-subtitle{font-size:clamp(8px,0.7vw,10px);color:var(--muted);letter-spacing:0.06em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.header-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+
+.back-link,.panel-link-button{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:4px 10px;border:1px solid var(--border);background:transparent;
+  color:var(--text);text-decoration:none;font-family:inherit;
+  font-size:9px;letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap
+}
+.back-link:hover,.panel-link-button:hover{background:var(--bg)}
+.panel-link-button{width:100%}
+
+/* Sidebar & inspector — internal scroll, never overflow */
+.sidebar,.inspector{
+  background:var(--surface-2);overflow:hidden;
+  display:flex;flex-direction:column;border:none;min-width:0
+}
+.sidebar{grid-area:sidebar}
+.inspector{grid-area:inspector}
+.shell-panel{min-width:0}
+
+/* Panel content must scroll internally, not push the page */
+.sidebar .panel-content,
+.inspector .panel-content{
+  flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;
+}
+
+.viewer-panel{grid-area:viewer;position:relative;overflow:hidden;background:#181818;border:none}
+#viewer{width:100%;height:100%}
+
+/* Bottom panels — adaptive height, KPI col uses fluid token */
+.bottom-panels{
+  grid-area:bottom;min-height:0;
+  display:grid;
+  grid-template-columns:var(--kpi-col-w) 1fr;
+  gap:1px;background:var(--border)
+}
+.bottom-panel{background:var(--surface-2);overflow:hidden;display:flex;flex-direction:column}
+.bottom-panel .panel-content{overflow-y:auto;overflow-x:hidden;flex:1;min-height:0}
+.bottom-panel.collapsed .panel-content{display:none}
+
+/* Panel chrome */
+.panel-header{
+  padding:clamp(6px,0.8dvh,9px) 14px;border-bottom:1px solid var(--border);
+  font-size:9px;font-weight:400;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--muted);background:var(--surface-2);flex-shrink:0
+}
+.panel-content{padding:clamp(8px,1dvh,13px);overflow-y:auto}
+.stack{display:flex;flex-direction:column;gap:clamp(6px,0.8dvh,10px)}
+.compact-stack{gap:5px}
+
+.panel-card{border:1px solid var(--border);padding:clamp(8px,1dvh,11px);background:var(--surface);border-radius:0}
+.browser-card{min-height:160px;display:flex;flex-direction:column;flex:1}
+.section-title{font-size:9px;font-weight:400;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.field{display:flex;flex-direction:column;gap:3px}
+
+button.ghost{background:transparent;color:var(--text);border:1px solid var(--border);font-size:10px;letter-spacing:0.08em}
+button.ghost:hover{background:var(--bg);color:var(--text);box-shadow:none;transform:none}
+button.ghost.mini{padding:4px 8px;font-size:10px}
+
+.app-shell .button-row>*{flex:1 1 80px}
+
+.collapsible-header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.panel-header-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.panel-collapse-button{
+  width:24px;height:24px;padding:0;background:transparent;color:var(--muted);
+  border:1px solid var(--border);font-size:11px;flex:0 0 auto;
+  letter-spacing:0;text-transform:none;border-radius:0
+}
+.panel-collapse-button:hover{background:var(--bg);color:var(--text);border-color:var(--text)}
+
+/* Collapsed states */
+.app-shell.sidebar-collapsed{--sidebar-width:40px}
+.app-shell.inspector-collapsed{--inspector-width:40px}
+.app-shell.sidebar-collapsed .sidebar .panel-content,
+.app-shell.inspector-collapsed .inspector .panel-content{display:none}
+.app-shell.sidebar-collapsed .sidebar .workflow-stepper,
+.app-shell.inspector-collapsed .inspector .workflow-stepper{display:none}
+.app-shell.sidebar-collapsed .sidebar .panel-header,
+.app-shell.inspector-collapsed .inspector .panel-header{
+  height:100%;writing-mode:vertical-rl;transform:rotate(180deg);
+  justify-content:space-between;padding:12px 8px
+}
+.app-shell.sidebar-collapsed .sidebar .panel-collapse-button,
+.app-shell.inspector-collapsed .inspector .panel-collapse-button{transform:rotate(90deg)}
+.app-shell.sidebar-collapsed .sidebar .panel-header-title,
+.app-shell.inspector-collapsed .inspector .panel-header-title{text-align:center}
+.app-shell.bottom-panels-collapsed{grid-template-rows:var(--header-h) minmax(0,1fr) 36px}
+.app-shell.bottom-panels-collapsed .bottom-panels{align-content:end}
+.app-shell.bottom-panels-collapsed .bottom-panel.collapsed{min-height:0}
+
+/* Viewer overlays */
+.viewer-overlay-dock{position:absolute;top:8px;left:8px;display:flex;gap:6px;z-index:4;align-items:flex-start;max-width:calc(100% - 130px)}
+.viewer-overlay-card{min-width:190px;background:rgba(16,16,16,0.92);border:1px solid rgba(255,255,255,0.1);overflow:hidden}
+.viewer-overlay-card.collapsed{min-width:38px;width:38px}
+.viewer-overlay-card.collapsed .viewer-overlay-body,.viewer-overlay-card.collapsed .viewer-overlay-text{display:none}
+.viewer-overlay-toggle{
+  width:100%;display:flex;align-items:center;gap:8px;justify-content:flex-start;
+  padding:8px 10px;border:0;border-bottom:1px solid rgba(255,255,255,0.07);
+  border-radius:0;background:rgba(0,0,0,0.28);color:rgba(255,255,255,0.75);
+  font-size:10px;letter-spacing:0.1em;text-transform:uppercase;box-shadow:none
+}
+.viewer-overlay-toggle:hover{background:rgba(11,122,106,0.22);color:#fff;transform:none}
+.viewer-overlay-icon{display:inline-flex;width:16px;justify-content:center;font-size:13px}
+.viewer-overlay-body{padding:9px;display:flex;flex-direction:column;gap:7px}
+.viewer-overlay-card .tool-group-actions{display:flex;flex-wrap:wrap;gap:5px}
+.viewer-overlay-card .tool-group-actions button{
+  flex:1 1 85px;padding:5px 7px;font-size:10px;
+  color:rgba(255,255,255,0.65);border-color:rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.04);letter-spacing:0.07em
+}
+.viewer-overlay-card .tool-group-actions button:hover{background:rgba(11,122,106,0.22);color:#fff}
+.viewer-inline-field label{color:rgba(255,255,255,0.45)}
+.viewer-overlay-card select{
+  width:100%;padding:6px 8px;border:1px solid rgba(255,255,255,0.15);
+  background:#1e1e1e;color:#e0e0e0;border-radius:0;font-size:11px
+}
+.viewer-overlay-card select option{background:#1e1e1e;color:#e0e0e0}
+
+.viewer-status-bar{position:absolute;left:10px;bottom:10px;display:flex;gap:5px;z-index:4}
+.viewer-chip{
+  display:inline-flex;align-items:center;gap:5px;padding:4px 9px;
+  background:rgba(16,16,16,0.88);border:1px solid rgba(255,255,255,0.09);
+  color:rgba(255,255,255,0.65);font-size:9px;letter-spacing:0.1em;text-transform:uppercase
+}
+
+.viewer-corner-widget{position:absolute;top:12px;right:12px;width:108px;z-index:4;display:flex;flex-direction:column;gap:6px}
+.cube-caption{
+  align-self:flex-end;padding:3px 7px;background:rgba(16,16,16,0.88);
+  border:1px solid rgba(255,255,255,0.09);color:rgba(255,255,255,0.5);
+  font-size:9px;letter-spacing:0.1em;text-transform:uppercase
+}
+.cube-shell{position:relative;width:78px;height:78px;margin-left:auto;transform:rotate(-30deg) skewY(18deg)}
+.cube-face{
+  position:absolute;display:flex;align-items:center;justify-content:center;
+  font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);
+  border:1px solid rgba(255,255,255,0.1);background:rgba(22,22,22,0.85);cursor:pointer;padding:0;border-radius:0
+}
+.cube-face:hover{background:rgba(11,122,106,0.3);color:#fff}
+.cube-top{width:42px;height:42px;left:16px;top:0}
+.cube-front{width:42px;height:42px;left:0;top:30px}
+.cube-right{width:42px;height:42px;left:34px;top:30px}
+.cube-side-actions{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.cube-side-actions .ghost{color:rgba(255,255,255,0.55);border-color:rgba(255,255,255,0.1);background:rgba(16,16,16,0.88);font-size:9px;letter-spacing:0.07em}
+.cube-side-actions .ghost:hover{background:rgba(11,122,106,0.25);color:#fff}
+
+.viewer-legend{position:absolute;right:12px;bottom:42px;min-width:145px;padding:8px 10px;background:rgba(16,16,16,0.88);border:1px solid rgba(255,255,255,0.09);color:rgba(255,255,255,0.65);z-index:4}
+.viewer-legend-title{font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.38);margin-bottom:6px}
+.viewer-legend-row{display:flex;align-items:center;gap:7px;font-size:11px}
+.viewer-legend-row+.viewer-legend-row{margin-top:4px}
+.legend-swatch{width:11px;height:11px;border:1px solid rgba(255,255,255,0.12);flex:0 0 auto}
+.viewer-legend-divider{height:1px;margin:6px 0;background:rgba(255,255,255,0.1)}
+.legend-room{background:rgba(13,71,161,0.65)}
+.legend-shaft{background:rgba(229,57,53,0.72)}
+.legend-corridor{background:rgba(253,216,53,0.72)}
+.legend-selected{background:rgba(0,200,83,0.72)}
+.legend-route-hei{background:var(--hei)}
+.legend-route-lue{background:var(--lue)}
+.legend-route-san{background:var(--san)}
+.legend-route-active{background:rgba(0,230,118,0.95)}
+.legend-route-option{background:rgba(144,164,174,0.7)}
+
+/* Browser */
+.browser-tabs{display:flex;gap:0;margin-bottom:8px}
+.model-browser{min-height:180px;flex:1;overflow:auto;border:1px solid var(--border);padding:7px;background:var(--surface)}
+.browser-node{margin-bottom:3px}
+.browser-node summary{list-style:none}
+.browser-node summary::-webkit-details-marker{display:none}
+.browser-children{margin-left:13px;padding-left:6px;border-left:1px solid var(--border)}
+.browser-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:6px;padding:5px 7px;background:var(--surface-2);border:1px solid var(--border);margin-bottom:2px}
+.browser-row.selected{border-color:var(--brand);background:var(--brand-dim)}
+.browser-label,.browser-focus{background:transparent;border:none;color:var(--text);box-shadow:none;transform:none;padding:0;text-align:left;font-size:12px;text-transform:none}
+.browser-label:hover,.browser-focus:hover{color:var(--brand);background:transparent;box-shadow:none;transform:none}
+.browser-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.browser-category{color:var(--muted);font-size:10px;margin-left:4px}
+.browser-count{font-size:9px;color:var(--muted);background:var(--bg);padding:2px 5px;border:1px solid var(--border)}
+
+/* IFC properties */
+.ifc-properties{display:flex;flex-direction:column;gap:5px}
+.ifc-group{border:1px solid var(--border);overflow:hidden;background:var(--surface)}
+.ifc-group>summary{padding:7px 10px;cursor:pointer;font-size:9px;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+.ifc-children{padding:8px 10px;display:flex;flex-direction:column;gap:5px}
+.ifc-leaf{display:grid;grid-template-columns:minmax(90px,150px) 1fr;gap:7px;align-items:start}
+.ifc-key{color:var(--muted);font-size:11px}
+.ifc-value{color:var(--text);overflow-wrap:anywhere;font-size:11px}
+
+.detail-list{display:grid;grid-template-columns:95px 1fr;gap:5px 8px;font-size:12px}
+.compact-detail-list{row-gap:5px}
+.variant-table-wrap{max-height:220px;overflow:auto}
+
+.route-table{width:100%;border-collapse:collapse;font-size:11px}
+.route-table th,.route-table td{padding:5px 7px;border-bottom:1px solid var(--border);text-align:left}
+.route-table thead th{position:sticky;top:0;background:var(--surface-2);z-index:1;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
+.route-table tbody tr:hover{background:var(--bg)}
+.route-table tbody tr.active{background:var(--brand-dim);outline:1px solid var(--brand)}
+.route-table td.muted{text-align:center;padding:12px 7px}
+.route-helper-text{padding:7px 9px;background:var(--bg);border:1px solid var(--border);font-size:12px}
+
+.kpi-side{border-right:1px solid var(--border);padding:13px;overflow:auto}
+.kpi-chart{padding:10px}
+.kpi-list{display:grid;gap:0}
+.kpi-card{padding:7px 9px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:7px;background:var(--surface-2)}
+.kpi-card .label{color:var(--muted);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap}
+.kpi-card .value{font-size:14px;font-weight:400;text-align:right}
+.app-shell .status-pill{background:transparent;border-color:var(--border);color:var(--muted)}
+
+.variant-empty-state{display:grid;place-items:center;min-height:180px;border:1px dashed var(--border);color:var(--muted);font-size:12px;padding:20px;text-align:center;background:var(--bg)}
+.variant-graph-list{display:grid;gap:7px;min-height:180px}
+.variant-graph-item{display:grid;gap:5px;width:100%;text-align:left;background:var(--surface-2);border:1px solid var(--border);padding:9px;border-radius:0;cursor:pointer}
+.variant-graph-item.active{border-color:var(--brand)}
+.variant-graph-header,.variant-graph-meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.variant-graph-title{font-size:12px}
+.variant-graph-strategy,.variant-graph-meta{color:var(--muted);font-size:11px}
+.variant-graph-bar-track{height:3px;background:var(--border);overflow:hidden}
+.variant-graph-bar{height:100%;background:var(--brand)}
+
+.design-explorer-shell{display:flex;flex-direction:column;gap:8px}
+.design-explorer-toolbar{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.de-panel{display:flex;flex-direction:column;gap:7px}
+.de-controls{display:flex;flex-direction:column;gap:7px}
+.de-field-block{display:flex;flex-direction:column;gap:5px}
+.de-label{font-size:9px;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted)}
+.de-category-list{display:flex;flex-wrap:wrap;gap:4px}
+.de-category-chip{padding:3px 8px;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--muted);cursor:pointer;border-radius:0}
+.de-category-chip.active{background:var(--text);color:var(--surface-2);border-color:var(--text)}
+.de-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.de-field{display:grid;gap:3px;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+.de-summary-box{border:1px solid var(--border);padding:5px 8px;background:var(--bg);display:flex;flex-direction:column;gap:2px}
+.de-body{display:grid;grid-template-columns:1fr 190px;gap:7px}
+.de-chart-card{border:1px solid var(--border);padding:7px;background:var(--bg)}
+.de-chart-title{font-size:9px;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.de-detail-card{border:1px solid var(--border);padding:9px;background:var(--surface)}
+.de-detail-title{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:7px;color:var(--text)}
+.de-detail-list{display:grid;grid-template-columns:auto 1fr;gap:3px 8px;font-size:11px}
+.de-detail-hint{margin-top:7px}
+.de-empty-state{color:var(--muted);font-size:12px;padding:18px;text-align:center}
+.de-table-card{border:1px solid var(--border);background:var(--surface-2)}
+.de-table-wrap{overflow:auto;max-height:180px}
+.de-table{width:100%;border-collapse:collapse;font-size:11px}
+.de-table th,.de-table td{padding:4px 7px;border-bottom:1px solid var(--border);text-align:left}
+.de-table thead th{position:sticky;top:0;background:var(--surface-2);z-index:1;font-size:9px;letter-spacing:0.11em;text-transform:uppercase;color:var(--muted)}
+.de-table tbody tr:hover{background:var(--bg)}
+.de-table tbody tr.active{background:var(--brand-dim);outline:1px solid var(--brand)}
+.de-legend{display:flex;flex-wrap:wrap;gap:7px;margin-top:5px}
+.de-legend-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)}
+.de-legend-dot{width:9px;height:9px;flex:0 0 auto}
+
+.diagram-holder{display:grid}
+.diagram-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
+.diagram-card{border:1px solid var(--border);padding:10px;background:var(--surface);display:grid;gap:7px}
+.diagram-card-large{background:var(--surface-2)}
+.diagram-card-header{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.diagram-title{font-size:9px;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted)}
+.diagram-svg{width:100%;height:auto;border:1px solid var(--border);background:var(--surface-2)}
+.diagram-legend{display:flex;flex-wrap:wrap;gap:9px;font-size:11px;color:var(--muted)}
+.diagram-empty,.diagram-note{font-size:12px;color:var(--muted)}
+.legend-band{background:rgba(11,122,106,0.1);border:1px solid rgba(11,122,106,0.25)}
+.legend-range{background:var(--muted)}
+.legend-point{background:var(--text);width:10px;height:10px;border-radius:50%}
+
+.route-kpi-panel .kpi-list{grid-template-columns:1fr;gap:0}
+#timing-summary{font-size:11px;color:var(--muted)}
+
+@media(max-width:1450px){
+  .app-shell{--sidebar-width:clamp(200px,16vw,280px);--inspector-width:clamp(220px,18vw,300px);--kpi-col-w:clamp(140px,12vw,190px)}
+}
+@media(max-width:1200px){
+  .app-shell{--sidebar-width:clamp(190px,15vw,250px);--inspector-width:clamp(200px,17vw,270px);--bottom-h:clamp(170px,25dvh,290px)}
+}
+@media(max-width:1000px){
+  .app-shell{
+    grid-template-rows:var(--header-h) auto minmax(300px,45dvh) auto auto;
+    grid-template-columns:1fr;
+    grid-template-areas:"header" "sidebar" "viewer" "inspector" "bottom";
+    height:auto;overflow:auto;gap:var(--space);padding:var(--space);background:var(--bg)
+  }
+  .sidebar .panel-content,.inspector .panel-content{overflow:visible;flex:none}
+  .bottom-panels{grid-template-columns:1fr}
+  .viewer-panel{min-height:300px}
+}
+@media(max-width:720px){
+  .panel-content{padding:8px}
+  .browser-row{grid-template-columns:auto minmax(0,1fr) auto}
+  .browser-count{display:none}
+  .detail-list,.ifc-leaf{grid-template-columns:1fr}
+  .de-body{grid-template-columns:1fr}
+  .de-grid{grid-template-columns:1fr}
+  .route-kpi-panel .kpi-list{grid-template-columns:1fr}
+}
+
+/* ============================================================
+   UX IMPROVEMENTS — WORKFLOW STEPPER, METRIC CARDS, SCORE BARS
+   ============================================================ */
+
+/* --- Workflow stepper --- */
+.workflow-stepper {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+  flex-shrink: 0;
+}
+.workflow-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: clamp(4px,0.6dvh,7px) clamp(6px,0.7vw,10px);
+  border-right: 1px solid var(--border);
+  cursor: default;
+  position: relative;
+  transition: background 0.15s;
+  min-width: 0;
+  overflow: hidden;
+}
+.workflow-step:last-child { border-right: none; }
+.workflow-step-num {
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--hint);
+  margin-bottom: 1px;
+}
+.workflow-step-label {
+  font-size: clamp(7px,0.7vw,9px);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+.workflow-step.active {
+  background: var(--brand-dim);
+  border-bottom: 2px solid var(--brand);
+}
+.workflow-step.active .workflow-step-num { color: var(--brand); }
+.workflow-step.active .workflow-step-label { color: var(--text); font-weight: 500; }
+.workflow-step.done .workflow-step-label { color: var(--muted); }
+.workflow-step.done::after {
+  content: "✓";
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 9px;
+  color: var(--brand);
+}
+
+/* --- Metric grid for KPIs (replaces flat list) --- */
+.route-kpi-panel .kpi-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 0;
+}
+.route-kpi-panel .kpi-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: clamp(5px,0.7dvh,8px) clamp(6px,0.6vw,10px);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  background: var(--bg);
+  gap: 1px;
+}
+.route-kpi-panel .kpi-card .label {
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.route-kpi-panel .kpi-card .value {
+  font-size: clamp(13px, 1.4vw, 18px);
+  font-weight: 400;
+  color: var(--text);
+  text-align: left;
+}
+.kpi-section-divider {
+  grid-column: 1 / -1;
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--hint);
+  padding: 4px 0 2px;
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+}
+
+/* --- Score bar in variant table --- */
+.score-bar-cell { min-width: 70px; }
+.score-bar-track {
+  height: 4px;
+  background: var(--border);
+  border-radius: 0;
+  overflow: hidden;
+  margin-top: 3px;
+}
+.score-bar-fill {
+  height: 100%;
+  border-radius: 0;
+  transition: width 0.2s;
+}
+.score-bar-fill.score-good  { background: var(--brand); }
+.score-bar-fill.score-ok    { background: var(--warn); }
+.score-bar-fill.score-poor  { background: var(--danger); }
+.score-val { font-size: 11px; }
+
+/* --- Apply strategy button — make prominent --- */
+#apply-system-strategy-button {
+  background: var(--text);
+  color: var(--surface-2);
+  border-color: var(--text);
+  width: 100%;
+  padding: 9px 14px;
+  font-size: 10px;
+}
+#apply-system-strategy-button:hover { background: #333; border-color: #333; }
+
+/* --- Export button --- */
+#export-routing-ifc-button {
+  width: 100%;
+  padding: 9px 14px;
+}
+
+/* --- Score tooltip on variant table --- */
+.variant-score-label {
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  display: block;
+}
+
+/* --- Empty state hint in viewer --- */
+.viewer-empty-hint {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(16,16,16,0.82);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.6);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  padding: 8px 16px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 3;
+  display: none;
+}
+.viewer-empty-hint.visible { display: block; }
+
+/* --- Variant table rank badge --- */
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  font-size: 8px;
+  font-weight: 500;
+  background: var(--border);
+  color: var(--muted);
+  flex-shrink: 0;
+  margin-right: 4px;
+}
+.rank-badge.rank-1 { background: var(--brand); color: #fff; }
+
+/* --- Variant table selected row indicator --- */
+.route-table tbody tr.active .rank-badge.rank-1 { background: var(--brand); }
+
+/* --- Score info tooltip --- */
+.score-info {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 9px;
+  cursor: help;
+  margin-left: 3px;
+  vertical-align: middle;
+}
+.score-info:hover { border-color: var(--text); color: var(--text); }
+
+/* --- Section label for route vs system KPIs --- */
+.kpi-group-label {
+  grid-column: 1 / -1;
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--hint);
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+
+/* ============================================================
+   NEXARA ADDONS — landing bento + vorprojekt mockup elements
+   ============================================================ */
+
+/* Checkbox rows in system filter */
+.checkbox-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text); cursor: pointer; padding: 3px 0;
+}
+.checkbox-row input[type="checkbox"] {
+  width: 13px; height: 13px; flex-shrink: 0;
+  accent-color: var(--brand); cursor: pointer;
+  border: 1px solid var(--border); border-radius: 0;
+}
+
+/* Routing variant score bars */
+.variant-score-card {
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  background: var(--bg);
+  cursor: pointer;
+  transition: border-color 0.1s;
+}
+.variant-score-card:hover { border-color: var(--text); }
+.variant-score-card.active {
+  border-color: var(--brand);
+  background: var(--brand-dim);
+}
+.variant-score-card.danger { border-color: var(--danger); }
+.variant-score-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 6px;
+}
+.variant-score-name { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text); }
+.variant-score-card.active .variant-score-name { color: var(--brand); }
+.variant-score-card.danger .variant-score-name { color: var(--danger); }
+.variant-score-val  { font-size: 9px; color: var(--muted); }
+.variant-score-bar-track { width: 100%; height: 3px; background: var(--border); }
+.variant-score-bar-fill  { height: 100%; background: var(--brand); transition: width 0.3s; }
+.variant-score-card.danger .variant-score-bar-fill { background: var(--danger); }
+.variant-score-card:not(.active):not(.danger) .variant-score-bar-fill { background: var(--warn); }
+.variant-score-meta {
+  display: flex; justify-content: space-between;
+  font-size: 9px; color: var(--muted); margin-top: 4px;
+}
+.variant-score-card.danger .variant-score-meta { color: var(--danger); }
+
+/* Landing bento: info tiles */
+.info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 6px; }
+.info-tile {
+  border: 1px solid var(--border); background: var(--bg);
+  padding: 8px 10px; display: flex; flex-direction: column; gap: 3px;
+}
+.info-tile-key { font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.info-tile-val { font-size: 12px; color: var(--text); }
+
+/* ============================================================
+   NEXARA v5 — 2-row grid, resizable panels, bottom tabs
+   ============================================================ */
+
+/* ── App shell: 2-row grid (bottom lives inside viewer) ── */
+.app-shell {
+  --bottom-h: clamp(220px, 28dvh, 380px);
+  grid-template-rows: var(--header-h) minmax(0, 1fr) !important;
+  grid-template-areas: "header header header" "sidebar viewer inspector" !important;
+}
+/* bottom-panels-collapsed no longer collapses a grid row */
+.app-shell.bottom-panels-collapsed {
+  grid-template-rows: var(--header-h) minmax(0, 1fr) !important;
+}
+
+/* ── Viewer: flex column (canvas on top, bottom tabs below) ── */
+.viewer-panel { display: flex !important; flex-direction: column !important; }
+
+/* 3D canvas fills all remaining space */
+.viewer-canvas-wrap {
+  flex: 1; min-height: 0; position: relative; overflow: hidden; background: #181818;
+}
+/* Viewer overlay dock etc. must be inside canvas-wrap */
+.viewer-canvas-wrap .viewer-overlay-dock { position: absolute; top: 16px; left: 16px; z-index: 10; }
+.viewer-canvas-wrap #viewer            { position: absolute; inset: 0; }
+.viewer-canvas-wrap .viewer-empty-hint { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); }
+.viewer-canvas-wrap .viewer-corner-widget { position: absolute; top: 16px; right: 16px; z-index: 10; }
+.viewer-canvas-wrap .viewer-legend    { position: absolute; bottom: 60px; right: 16px; z-index: 5; }
+.viewer-canvas-wrap .viewer-status-bar { position: absolute; bottom: 0; left: 0; right: 0; }
+
+/* ── Sidebar resize handle (right edge of sidebar) ── */
+.sidebar { position: relative; }
+.sidebar-resize-handle {
+  position: absolute; top: 0; right: -4px; bottom: 0; width: 8px;
+  cursor: col-resize; z-index: 200; background: transparent;
+}
+.sidebar-resize-handle:hover { background: var(--brand); opacity: 0.35; }
+
+/* ── Bottom tabs panel ── */
+.viewer-bottom-tabs {
+  flex-shrink: 0;
+  height: var(--bottom-h);
+  min-height: 80px;
+  display: flex; flex-direction: column;
+  background: var(--surface-2);
+  border-top: 2px solid var(--border-hi);
+  overflow: hidden;
+}
+.bottom-resize-handle {
+  height: 6px; flex-shrink: 0; cursor: row-resize;
+  background: transparent; border-bottom: 1px solid var(--border);
+}
+.bottom-resize-handle:hover { background: var(--brand); opacity: 0.3; }
+
+/* Tab strip */
+.bottom-tabs-strip {
+  display: flex; flex-shrink: 0;
+  background: var(--surface-2); border-bottom: 1px solid var(--border);
+}
+.bottom-tab-btn {
+  background: transparent; color: var(--muted);
+  border: none; border-top: 2px solid transparent; border-radius: 0;
+  padding: 6px 16px; font-size: 9px; letter-spacing: 0.18em;
+  text-transform: uppercase; cursor: pointer; font-family: inherit;
+  transition: color 0.1s;
+}
+.bottom-tab-btn.active { color: var(--text); border-top-color: var(--brand); }
+.bottom-tab-btn:hover  { color: var(--text); background: var(--bg); }
+
+/* Tab panel content */
+.bottom-tab-panels { flex: 1; min-height: 0; overflow: hidden; position: relative; }
+.bottom-tab-panel  { display: none; height: 100%; overflow-y: auto; padding: var(--space); }
+.bottom-tab-panel.active { display: block; }
+
+/* ── Sidebar/inspector collapse: hide footer too ── */
+.app-shell.sidebar-collapsed .sidebar > div:last-child { display: none; }
+.app-shell.inspector-collapsed .inspector > div:last-child { display: none; }
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .app-shell { --sidebar-width: clamp(170px, 14vw, 240px); --inspector-width: clamp(200px, 17vw, 270px); }
+}
+
+/* ============================================================
+   NEXARA v6 — Studie bento-3col + VP KPI split + inspector
+   ============================================================ */
+
+/* ── Studie: tab bar below header ─────────────────── */
+.studie-tab-bar {
+  display: flex; align-items: stretch;
+  background: var(--surface-2);
+  border-bottom: 2px solid var(--border-hi);
+  padding: 0 var(--space);
+  flex-shrink: 0;
+}
+.studie-tab {
+  background: transparent; color: var(--muted);
+  border: none; border-bottom: 2px solid transparent;
+  margin-bottom: -2px; /* overlap border */
+  padding: 8px 18px 6px;
+  font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+  cursor: pointer; font-family: inherit; transition: color 0.1s;
+}
+.studie-tab.active { color: var(--text); border-bottom-color: var(--brand); }
+.studie-tab:hover  { color: var(--text); background: var(--bg); }
+
+/* header-actions reuse for studie */
+.studie-header-actions {
+  display: flex; align-items: center; gap: 6px;
+  margin-left: auto; flex-shrink: 0;
+}
+.studie-header-actions a,
+.studie-header-actions button {
+  text-decoration: none; padding: 4px 10px; background: transparent;
+  color: var(--text); cursor: pointer; border: 1px solid var(--border);
+  font-family: inherit; font-size: 9px; letter-spacing: 0.1em;
+  text-transform: uppercase; white-space: nowrap;
+}
+.studie-header-actions a:hover { background: var(--bg); }
+#autofill-button {
+  background: #0B7A6A !important; border-color: #0B7A6A !important; color: #fff !important;
+}
+#autofill-button:hover { background: #095f53 !important; border-color: #095f53 !important; }
+
+/* ── Studie 3-column bento ──────────────────────── */
+.studie-bento-3col {
+  display: grid;
+  grid-template-columns: clamp(220px, 18vw, 300px) 1fr clamp(220px, 20vw, 340px);
+  gap: var(--space);
+  padding: var(--space);
+  height: calc(100vh - var(--header-h) - 40px); /* 40px = tab bar */
+  align-items: start;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.studie-col { display: flex; flex-direction: column; gap: var(--space); height: 100%; overflow-y: auto; }
+.studie-col-left  { min-width: 0; }
+.studie-col-mid   { min-width: 0; }
+.studie-col-right { min-width: 0; }
+
+/* Compact chart in technikräume middle column */
+.techroom-chart-compact svg { max-height: 320px !important; }
+
+/* Diagrams stacked in right column */
+.diagram-grid-right {
+  display: flex; flex-direction: column; gap: var(--space);
+}
+.diagram-grid-right .diagram-card { width: 100%; }
+.diagram-grid-right .diagram-svg  { width: 100%; height: auto; }
+
+/* body overflow for studie */
+body.studie-page { overflow: hidden; }
+
+/* ── VP: KPI split layout ───────────────────────── */
+.kpi-split {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 0;
+  height: 100%;
+  min-height: 0;
+}
+.kpi-split-col { display: flex; flex-direction: column; gap: 6px; padding: 0 12px; overflow-y: auto; }
+.kpi-split-col:first-child { padding-left: 0; }
+.kpi-split-divider { background: var(--border); width: 1px; margin: 0 4px; }
+.kpi-col-label {
+  font-size: 8px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted); padding-bottom: 4px;
+  border-bottom: 1px solid var(--border); margin-bottom: 4px; flex-shrink: 0;
+}
+.kpi-list.kpi-system,
+.kpi-list.kpi-route { flex-direction: column; display: flex; gap: 4px; }
+
+/* ── VP: inspector variant card dynamic ─────────── */
+.inspector { display: flex; flex-direction: column; }
+.inspector .panel-content { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+.variant-card-dynamic { flex: 1 1 0; min-height: 120px; display: flex; flex-direction: column; overflow: hidden; }
+.variant-table-dynamic { flex: 1; min-height: 0; overflow-y: auto; }
+.inspector-footer {
+  padding: 8px; border-top: 1px solid var(--border);
+  display: flex; gap: 6px; background: var(--surface-2); flex-shrink: 0;
+}
+
+/* ── VP: taller bottom, shorter viewer ──────────── */
+.app-shell { --bottom-h: clamp(260px, 32dvh, 460px) !important; }
+
+/* ── VP: bigger default bottom h override ───────── */
+.viewer-bottom-tabs { min-height: var(--bottom-h); }
+
+/* ============================================================
+   NEXARA v7 — inspector resize, KPI timing row, DE embed fill
+   ============================================================ */
+
+/* ── Studie tab bar: actions on right ──────────────── */
+.studie-tab-bar { display: flex; align-items: center; }
+.studie-tab-actions {
+  display: flex; align-items: center; gap: 6px;
+  margin-left: auto; padding: 0 var(--space);
+}
+.studie-tab-actions a,
+.studie-tab-actions button {
+  text-decoration: none; padding: 4px 10px; background: transparent;
+  color: var(--text); cursor: pointer; border: 1px solid var(--border);
+  font-family: inherit; font-size: 9px; letter-spacing: 0.1em;
+  text-transform: uppercase; white-space: nowrap;
+}
+.studie-tab-actions a:hover { background: var(--bg); }
+
+/* ── Inspector resize handle (left edge) ─────────── */
+.inspector { position: relative; }
+.inspector-resize-handle {
+  position: absolute; top: 0; left: -4px; bottom: 0; width: 8px;
+  cursor: col-resize; z-index: 200; background: transparent;
+}
+.inspector-resize-handle:hover { background: var(--brand); opacity: 0.35; }
+
+/* Collapse still works: when inspector-collapsed,
+   --inspector-width becomes 40px via existing CSS rule */
+.app-shell.inspector-collapsed .inspector-resize-handle { display: none; }
+.app-shell.sidebar-collapsed   .sidebar-resize-handle   { display: none; }
+
+/* ── Route KPIs: timing row full-width below split ── */
+.btab-kpi-inner { display: flex; flex-direction: column; height: 100%; }
+.kpi-split { flex: 1; min-height: 0; overflow: hidden; }
+.kpi-timing-row {
+  flex-shrink: 0;
+  border-top: 1px solid var(--border);
+  padding: 8px 12px;
+  background: var(--surface-2);
+}
+.kpi-timing-row .kpi-col-label { margin-bottom: 4px; }
+
+/* Route KPIs tab panel: flex column so timing snaps to bottom */
+#btab-kpi { display: none; flex-direction: column; padding: 0; }
+#btab-kpi.active { display: flex; }
+.kpi-split { padding: var(--space); }
+
+/* ── Design Explorer: fill available height ──────── */
+#btab-explorer { padding: 0; }
+.design-explorer-shell { display: flex; flex-direction: column; height: 100%; }
+.design-explorer-shell > #design-explorer-note {
+  flex-shrink: 0; padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.design-explorer-embed-fill {
+  flex: 1; min-height: 0; overflow: auto;
+  padding: var(--space);
+}
+/* Make parallel coords SVG fill container */
+.design-explorer-embed-fill svg { width: 100% !important; height: auto; }
+
+/* ============================================================
+   NEXARA v8 — timing pills, wider bars, DE fit, collapse fix
+   ============================================================ */
+
+/* ── Wider default sidebars ─────────────────────────── */
+:root,
+.app-shell {
+  --sidebar-width:   clamp(240px, 18vw, 340px);
+  --inspector-width: clamp(280px, 21vw, 400px);
+}
+
+/* ── Timing summary: compact inline pills ────────────── */
+.timing-compact {
+  display: flex; flex-wrap: wrap; gap: 4px 10px;
+  padding-top: 4px;
+}
+.timing-pill {
+  font-size: 10px; color: var(--muted);
+  white-space: nowrap;
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+}
+
+/* KPI rows: compact card spacing */
+.kpi-split { padding: 10px 12px 0; }
+.kpi-split-col { gap: 4px; }
+.kpi-list.kpi-system .kpi-card,
+.kpi-list.kpi-route  .kpi-card {
+  padding: 4px 8px !important;
+  min-height: 0 !important;
+}
+/* Bottom padding inside KPI tab */
+#btab-kpi { padding-bottom: 8px; }
+
+/* ── Design Explorer redesign ────────────────────────── */
+.de-toolbar {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.design-explorer-embed-fill {
+  flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden;
+  padding: 10px 12px;
+}
+/* Parallel coords chart: fill width, no overflow */
+.design-explorer-embed-fill svg {
+  width: 100% !important;
+  max-width: 100%;
+  height: auto !important;
+  display: block;
+}
+/* Hide route table inside DE */
+.design-explorer-embed-fill .variant-table-wrap,
+.design-explorer-embed-fill table.route-table,
+#design-explorer-embed .variant-table-wrap,
+#design-explorer-embed table.route-table { display: none !important; }
+
+/* ── Collapse fix: hide resize handles when collapsed ── */
+.app-shell.sidebar-collapsed   .sidebar-resize-handle   { pointer-events: none; opacity: 0; }
+.app-shell.inspector-collapsed .inspector-resize-handle { pointer-events: none; opacity: 0; }
+
+/* Ensure collapsed width truly wins over inline (belt + suspenders) */
+.app-shell.sidebar-collapsed   { --sidebar-width:   40px !important; }
+.app-shell.inspector-collapsed { --inspector-width: 40px !important; }
+
+
+
+/* ── Bottom breathing room — timing row + inspector footer ── */
+.kpi-timing-row          { padding-bottom: 14px; }
+.inspector-footer        { padding-bottom: 14px; }

@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEXARA — Studie</title>
+  <link rel="icon" type="image/svg+xml" href="/static/nexara-favicon.svg">
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    /* ── Studie-specific overrides ─────────────────── */
+    /* ── Studie header layout ─── */
+    .studie-header-tabs {
+      display: flex; align-items: stretch; height: 100%;
+      padding-top: 6px; /* breathing room at top */
+      margin-left: 24px;
+    }
+    .studie-header-tabs .tab-button {
+      background: transparent !important; color: var(--muted) !important;
+      border: none !important; border-bottom: 2px solid transparent !important;
+      border-top: 2px solid transparent !important; border-radius: 0 !important;
+      height: 100%; padding: 0 16px; letter-spacing: 0.12em;
+    }
+    .studie-header-tabs .tab-button.active {
+      color: var(--text) !important; background: transparent !important;
+      border-bottom-color: var(--brand) !important;
+    }
+    .studie-header-tabs .tab-button:hover {
+      background: var(--bg) !important; color: var(--text) !important;
+    }
+    .studie-header-actions {
+      display: flex; align-items: center; gap: 6px;
+      margin-left: auto; flex-shrink: 0;
+    }
+    .studie-header-actions a, .studie-header-actions button {
+      text-decoration:none; padding:4px 10px; background:transparent; color:var(--text);
+      cursor:pointer; border:1px solid var(--border); font-family:inherit;
+      font-size:9px; letter-spacing:0.1em; text-transform:uppercase; white-space:nowrap;
+    }
+    .studie-header-actions a:hover { background: var(--bg); }
+    /* Auto-fill button brand colour */
+    #autofill-button {
+      background: #0B7A6A !important; border-color: #0B7A6A !important; color: #fff !important;
+    }
+    #autofill-button:hover { background: #095f53 !important; border-color: #095f53 !important; }
+
+    body { overflow-y: auto; }
+
+    /* Two-column layout: sidebar + main */
+    .studie-layout {
+      display: grid;
+      grid-template-columns: clamp(280px, 22vw, 360px) 1fr;
+      gap: var(--space);
+      padding: var(--space);
+      align-items: start;
+    }
+    @media (max-width: 900px) { .studie-layout { grid-template-columns: 1fr; } }
+
+    .studie-sidebar { display: flex; flex-direction: column; gap: var(--space); }
+
+    /* Main content panel */
+    .studie-main-panel {
+      background: var(--surface-2); border: 1px solid var(--border);
+      overflow: hidden; display: flex; flex-direction: column;
+    }
+    .table-scroll { overflow: auto; max-height: 82vh; }
+
+    /* Tab strip flush with header */
+    .tab-strip-wrap {
+      padding: 0 var(--space);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface-2);
+    }
+
+    /* Metric grid */
+    .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
+    .metric { border: 1px solid var(--border); padding: 8px 10px; background: var(--bg); }
+    .metric-label { font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+    .metric-value { font-size: 18px; font-weight: 400; }
+    .metric-value-small { font-size: 13px; }
+
+    /* Summary list */
+    .summary-list { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+    .summary-item { border: 1px solid var(--border); padding: 7px 9px; background: var(--bg); font-size: 12px; }
+
+    /* Diagram */
+    .diagram-holder { margin-top: 4px; }
+    .diagram-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space); margin-top: 4px; }
+    .diagram-svg { width: 100%; height: auto; display: block; border: 1px solid var(--border); }
+    .diagram-empty { padding: 20px; color: var(--muted); font-size: 12px; text-align: center; }
+    .diagram-label { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .diagram-card { display: flex; flex-direction: column; }
+
+    /* Techrooms tab main area */
+    .studie-techrooms-main { display: flex; flex-direction: column; gap: var(--space); }
+  </style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="header-brand">
+    <img src="/static/nexara-logo_rem.png" alt="NEXARA" class="nexara-logo">
+    <div class="header-brand-text">
+      <div class="app-title">Studie</div>
+      <div class="app-subtitle">Steigzonen &amp; Technikräume · IFC-gestützte Prüfungen</div>
+    </div>
+  </div>
+  <div class="studie-header-actions">
+    <a href="/" class="back-link">Startseite</a>
+    <a href="/vorprojekt" class="back-link">Vorprojekt</a>
+  </div>
+</header>
+
+<!-- Tab bar below header: tabs left, actions right -->
+<div class="studie-tab-bar">
+  <button id="tab-button-shafts"    class="studie-tab active" type="button" data-tab="shafts">Steigzonen</button>
+  <button id="tab-button-techrooms" class="studie-tab"        type="button" data-tab="techrooms">Technikräume</button>
+  <div class="studie-tab-actions">
+    <button id="autofill-button" type="button">Auto-Befüllung aus IFC</button>
+    <a href="/api/studie/export" class="back-link" id="download-excel-btn">Excel herunterladen</a>
+  </div>
+</div>
+
+<!-- ── Shafts tab: 3-column bento ─────────────────────── -->
+<section id="tab-panel-shafts" class="tab-panel active">
+  <div class="studie-bento-3col">
+
+    <!-- LEFT: project info + IFC metrics -->
+    <aside class="studie-col studie-col-left stack">
+      <div class="panel-card stack">
+        <div class="section-title">Aktuelles Projekt</div>
+        <div id="project-meta" class="small muted">Loading…</div>
+        <div class="section-title" style="margin-top:6px;">Regeln</div>
+        <div class="small muted">Kriterien 1–5 erlauben je eine Auswahl. Kriterien 6–8 erlauben je bis zu drei Auswahlen; die Gewichte 1, 2 und 3 dürfen pro Kriterium nur einmal verwendet werden.</div>
+      </div>
+      <div class="panel-card stack">
+        <div class="section-title">IFC-Prüfung für das gesamte Gebäude</div>
+        <div id="ifc-metrics" class="metric-grid"></div>
+        <div id="ifc-notes" class="small muted" style="margin-top:6px;"></div>
+      </div>
+    </aside>
+
+    <!-- MIDDLE: criteria table -->
+    <div class="studie-col studie-col-mid">
+      <div class="studie-main-panel" style="height:100%;">
+        <div class="panel-header">Tabelle 1 — Überschlägige Ermittlung des Bruttoplatzbedarfs von Installationsschächten</div>
+        <div class="table-scroll">
+          <table id="studie-table"></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: weighted result + selected criteria -->
+    <aside class="studie-col studie-col-right stack">
+      <div class="panel-card stack">
+        <div class="section-title">Gewichtetes Ergebnis</div>
+        <div id="assessment-summary" class="summary-list"></div>
+      </div>
+      <div class="panel-card stack">
+        <div class="section-title">Gewählte Kriterien</div>
+        <div id="selection-summary" class="summary-list"></div>
+      </div>
+    </aside>
+
+  </div>
+</section>
+
+<!-- ── Techrooms tab: 3-column bento ──────────────────── -->
+<section id="tab-panel-techrooms" class="tab-panel">
+  <div class="studie-bento-3col">
+
+    <!-- LEFT: snapshot + notes -->
+    <aside class="studie-col studie-col-left stack">
+      <div class="panel-card stack">
+        <div class="section-title">VDI 2050 Übersicht</div>
+        <div id="techroom-overview" class="metric-grid"></div>
+      </div>
+      <div class="panel-card stack">
+        <div class="section-title">Hinweise</div>
+        <div id="techroom-notes" class="summary-list"></div>
+      </div>
+    </aside>
+
+    <!-- MIDDLE: main chart + comparison table + rooms table -->
+    <div class="studie-col studie-col-mid stack">
+      <div class="panel-card stack">
+        <div class="section-title">Projektpunkt im VDI-Diagramm</div>
+        <div id="techroom-best-chart" class="diagram-holder techroom-chart-compact"></div>
+        <div class="small muted" style="margin-top:6px;">Das blaue Band ist der digitalisierte VDI-Bereich. Der Projektpunkt verwendet die approximierte BGF und die gesamte erkannte Technikraumfläche aus dem IFC.</div>
+      </div>
+      <div class="panel-card stack">
+        <div class="section-title">Szenarienvergleich</div>
+        <div class="table-scroll"><table id="techroom-scenarios-table"></table></div>
+      </div>
+      <div class="panel-card stack">
+        <div class="section-title">Erkannte Technikräume aus dem IFC</div>
+        <div class="table-scroll"><table id="techroom-rooms-table"></table></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: best match + all scenario diagrams -->
+    <aside class="studie-col studie-col-right stack">
+      <div class="panel-card stack">
+        <div class="section-title">Bestes passendes Szenario</div>
+        <div id="techroom-best-match" class="summary-list"></div>
+      </div>
+      <div class="panel-card stack" style="flex:1;">
+        <div class="section-title">Alle Szenario-Diagramme</div>
+        <div id="techroom-diagram-grid" class="diagram-grid-right"></div>
+      </div>
+    </aside>
+
+  </div>
+</section>
+
+  <script>
+    const state = {
+      selectedCoords: new Set(),
+      weights: {},
+      tableRows: [],
+      activeTab: 'shafts',
+    };
+
+    function htmlEscape(value) {
+      return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;');
+    }
+
+    function setActiveTab(tabKey) {
+      state.activeTab = tabKey;
+      // Hide Download Excel on Technikräume tab (not relevant there)
+      const excelBtn = document.getElementById('download-excel-btn');
+      if (excelBtn) excelBtn.style.display = (tabKey === 'shafts') ? '' : 'none';
+      document.body.classList.add('studie-page');
+    document.querySelectorAll('.studie-tab, .tab-button').forEach(button => {
+        button.classList.toggle('active', button.dataset.tab === tabKey);
+      });
+      document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.toggle('active', panel.id === `tab-panel-${tabKey}`);
+      });
+    }
+
+    // Wire both studie-tab (new bar) and tab-button (any remaining legacy)
+    document.querySelectorAll('.studie-tab, .tab-button').forEach(button => {
+      button.addEventListener('click', () => setActiveTab(button.dataset.tab));
+    });
+
+    async function loadPage() {
+      const response = await fetch('/api/studie/data');
+      const data = await response.json();
+      state.selectedCoords = new Set(data.state?.selected_coords || []);
+      state.weights = data.state?.weights || {};
+      state.tableRows = data.table_rows || [];
+      render(data);
+    }
+
+    function render(data) {
+      renderProjectMeta(data.project || {});
+      renderIfcMetrics(data.ifc_metrics || {});
+      renderAssessment(data.assessment || {}, data.selection_summary || {});
+      renderSelections(data.selection_summary || {});
+      renderTable(data.table_rows || []);
+      renderTechrooms(data.technikraum || {});
+      setActiveTab(state.activeTab);
+    }
+
+    function renderProjectMeta(project) {
+      document.getElementById('project-meta').innerHTML = `
+        IFC: <strong>${htmlEscape(project.ifc_name || '-')}</strong><br>
+        Bedarfe: <strong>${htmlEscape(project.demands_name || '-')}</strong><br>
+        Konfiguration: <strong>${htmlEscape(project.config_name || '-')}</strong><br>
+        Konfigurationsquelle: <strong>${htmlEscape(project.config_source || '-')}</strong><br>
+        Laufzeit bereit: <strong>${project.has_bundle ? 'ja' : 'nein'}</strong>
+      `;
+    }
+
+    function renderIfcMetrics(metrics) {
+      const box = document.getElementById('ifc-metrics');
+      const notes = document.getElementById('ifc-notes');
+      if (!metrics.available) {
+        box.innerHTML = `<div class="metric" style="grid-column:1/-1;"><div class="metric-label">Status</div><div class="metric-value metric-value-small">${htmlEscape(metrics.message || 'Keine IFC-Metriken verfügbar.')}</div></div>`;
+        notes.textContent = '';
+        return;
+      }
+
+      box.innerHTML = `
+        <div class="metric"><div class="metric-label">Referenzgeschoss</div><div class="metric-value">${htmlEscape(metrics.reference_floor?.name || '-')}</div></div>
+        <div class="metric"><div class="metric-label">Geschossanzahl</div><div class="metric-value">${htmlEscape(metrics.floor_count ?? '-')}</div></div>
+        <div class="metric"><div class="metric-label">Approx. Gesamt BGF</div><div class="metric-value">${Math.round(metrics.total_floor_area_m2)} m²</div></div>
+        <div class="metric"><div class="metric-label">Schächte gesamt</div><div class="metric-value">${htmlEscape(metrics.shaft_count)}</div></div>
+        <div class="metric"><div class="metric-label">Approx. Schachtfläche</div><div class="metric-value">${Math.round(metrics.shaft_area_m2)} m²</div></div>
+        <div class="metric"><div class="metric-label">Schachtflächenanteil</div><div class="metric-value">${Math.round(metrics.shaft_share_pct * 10) / 10} %</div></div>
+        <div class="metric"><div class="metric-label">Schächte / 1000 m²</div><div class="metric-value">${htmlEscape(metrics.shafts_per_1000_m2)}</div></div>
+      `;
+
+      const suggestionLines = [];
+      if (metrics.criterion4_label) {
+        suggestionLines.push(`Vorschlag Kriterium 4.2 (Gesamtgebäude): <strong>${htmlEscape(metrics.criterion4_label)}</strong>`);
+      }
+      if (metrics.building_type_suggestion?.label) {
+        suggestionLines.push(`Gebäudetyp-Vorschlag: <strong>${htmlEscape(metrics.building_type_suggestion.label)}</strong> — ${htmlEscape(metrics.building_type_suggestion.reason || '')}`);
+      }
+      if (metrics.footprint_suggestion?.label) {
+        suggestionLines.push(`Grundriss-Vorschlag: <strong>${htmlEscape(metrics.footprint_suggestion.label)}</strong> — ${htmlEscape(metrics.footprint_suggestion.reason || '')}`);
+      }
+      if ((metrics.notes || []).length) {
+        suggestionLines.push(...metrics.notes.map(item => htmlEscape(item)));
+      }
+      notes.innerHTML = suggestionLines.join('<br>');
+    }
+
+    function renderAssessment(assessment, summary) {
+      const box = document.getElementById('assessment-summary');
+      const matchClass = assessment.band_match === true ? 'match-true' : assessment.band_match === false ? 'match-false' : '';
+      box.innerHTML = `
+        <div class="summary-item">Gesamtpunktzahl: <strong>${htmlEscape(summary.total_score || 0)}</strong></div>
+        <div class="summary-item">Gewichtetes Band: <strong>${htmlEscape(summary.score_band_label || '-')}</strong></div>
+        <div class="summary-item">Erwarteter Schachtflächenanteil: <strong>${htmlEscape(summary.required_share_label || '-')}</strong></div>
+        <div class="summary-item">Tatsächlicher Schachtflächenanteil: <strong>${assessment.actual_share_pct != null ? Math.round(assessment.actual_share_pct * 10) / 10 : '-'} %</strong></div>
+        <div class="summary-item ${matchClass}">${htmlEscape(assessment.band_message || '-')}</div>
+      `;
+    }
+
+    function renderSelections(summary) {
+      const box = document.getElementById('selection-summary');
+      const groups = summary.selections_by_criterion || {};
+      const parts = Object.entries(groups).map(([criterion, items]) => {
+        const list = items.map(item => `${htmlEscape(item.code)} — ${htmlEscape(item.label)}${item.weight ? ` (w=${item.weight})` : ''}`).join('<br>');
+        return `<div class="summary-item"><strong>Kriterium ${htmlEscape(criterion)}</strong><br>${list}</div>`;
+      });
+      box.innerHTML = parts.length ? parts.join('') : '<div class="summary-item">Noch keine Auswahl.</div>';
+    }
+
+    function renderTable(rows) {
+      const table = document.getElementById('studie-table');
+      const html = rows.map(row => {
+        const cells = row.map(cell => {
+          const classes = [cell.css_class || ''];
+          if (cell.selectable) classes.push('pickable');
+          if (cell.selected) classes.push('selected');
+
+          let content = htmlEscape(cell.value ?? '');
+          if (cell.weight_editable) {
+            const rowSelected = Array.from(state.selectedCoords).some(coord => coord.endsWith(String(cell.row)));
+            const disabled = rowSelected ? '' : 'disabled';
+            const current = state.weights[`F${cell.row}`] || '';
+            content = `
+              <select class="weight-select" data-weight-row="${cell.row}" ${disabled}>
+                <option value=""></option>
+                <option value="1" ${String(current) === '1' ? 'selected' : ''}>1</option>
+                <option value="2" ${String(current) === '2' ? 'selected' : ''}>2</option>
+                <option value="3" ${String(current) === '3' ? 'selected' : ''}>3</option>
+              </select>
+            `;
+          }
+
+          const attrs = [];
+          attrs.push(`rowspan="${cell.rowspan}"`);
+          attrs.push(`colspan="${cell.colspan}"`);
+          attrs.push(`class="${classes.join(' ').trim()}"`);
+          if (cell.selectable) attrs.push(`data-coord="${cell.coord}"`);
+          return `<td ${attrs.join(' ')}>${content}</td>`;
+        }).join('');
+        return `<tr>${cells}</tr>`;
+      }).join('');
+      table.innerHTML = html;
+      bindTableInteractions();
+    }
+
+    function renderTechrooms(payload) {
+      const overview = document.getElementById('techroom-overview');
+      const bestMatch = document.getElementById('techroom-best-match');
+      const notes = document.getElementById('techroom-notes');
+      const scenarioTable = document.getElementById('techroom-scenarios-table');
+      const roomTable = document.getElementById('techroom-rooms-table');
+      const bestChart = document.getElementById('techroom-best-chart');
+      const diagramGrid = document.getElementById('techroom-diagram-grid');
+
+      if (!payload.available) {
+        overview.innerHTML = `<div class="metric" style="grid-column:1/-1;"><div class="metric-label">Status</div><div class="metric-value metric-value-small">${htmlEscape(payload.message || 'Keine Technikraumanalyse verfügbar.')}</div></div>`;
+        bestMatch.innerHTML = '<div class="summary-item">Keine VDI-Szenario-Prüfung verfügbar.</div>';
+        notes.innerHTML = '<div class="summary-item">Zuerst ein IFC-Modell laden.</div>';
+        scenarioTable.innerHTML = '<tr><td>Keine Daten.</td></tr>';
+        roomTable.innerHTML = '<tr><td>Keine Daten.</td></tr>';
+        bestChart.innerHTML = '<div class="diagram-empty">Kein Diagramm verfügbar.</div>';
+        diagramGrid.innerHTML = '';
+        return;
+      }
+
+      const required = payload.required_disciplines || {};
+      overview.innerHTML = `
+        <div class="metric"><div class="metric-label">Approx. BGF</div><div class="metric-value">${Math.round(payload.approx_bgf_m2)} m²</div></div>
+        <div class="metric"><div class="metric-label">Gebäudehöhe</div><div class="metric-value">${payload.building_height_m != null ? Math.round(payload.building_height_m * 10) / 10 : '-'} m</div></div>
+        <div class="metric"><div class="metric-label">Studie Gebäudetyp</div><div class="metric-value metric-value-small">${htmlEscape(payload.use_family?.study_label || '-')}</div></div>
+        <div class="metric"><div class="metric-label">Verwendete VDI-Familie</div><div class="metric-value metric-value-small">${htmlEscape(payload.use_family?.label || '-')}</div></div>
+        <div class="metric"><div class="metric-label">Erkennungsquelle</div><div class="metric-value metric-value-small">${htmlEscape(payload.use_family?.source || '-')}</div></div>
+        <div class="metric"><div class="metric-label">Technik-Schlüsselwörter</div><div class="metric-value metric-value-small">${htmlEscape((payload.technical_room_keywords_used || []).join(', ') || '-')}</div></div>
+        <div class="metric"><div class="metric-label">Erkannte Technikräume</div><div class="metric-value">${htmlEscape(payload.technical_room_count || 0)}</div></div>
+        <div class="metric"><div class="metric-label">Tatsächliche Technikfläche</div><div class="metric-value">${payload.actual_technical_room_area_m2 != null ? Math.round(payload.actual_technical_room_area_m2) : '-'} m²</div></div>
+        <div class="metric"><div class="metric-label">Tatsächlicher Anteil</div><div class="metric-value">${payload.actual_technical_room_share_pct != null ? Math.round(payload.actual_technical_room_share_pct * 10) / 10 : '-'} %</div></div>
+        <div class="metric"><div class="metric-label">Sanitär</div><div class="metric-value metric-value-small">${required.sanitary?.found ? 'gefunden' : 'fehlt'}</div></div>
+        <div class="metric"><div class="metric-label">Heizung</div><div class="metric-value metric-value-small">${required.heating?.found ? 'gefunden' : 'fehlt'}</div></div>
+        <div class="metric"><div class="metric-label">Lüftung</div><div class="metric-value metric-value-small">${required.ventilation?.found ? 'gefunden' : 'fehlt'}</div></div>
+        <div class="metric"><div class="metric-label">Studie 8.3 RLT zentral</div><div class="metric-value metric-value-small">${payload.study_rlt_central_selected ? 'gewählt' : 'nicht gewählt'}</div></div>
+      `;
+
+      if (payload.best_match?.label) {
+        const badgeClass = payload.best_match.status_key === 'within'
+          ? 'status-badge status-within'
+          : payload.best_match.status_key === 'below'
+            ? 'status-badge status-below'
+            : 'status-badge status-above';
+        bestMatch.innerHTML = `
+          <div class="summary-item"><strong>${htmlEscape(payload.best_match.label)}</strong></div>
+          <div class="summary-item">Erwarteter Bereich: <strong>${Math.round(payload.best_match.expected_lower_m2)} bis ${Math.round(payload.best_match.expected_upper_m2)} m²</strong></div>
+          <div class="summary-item">Tatsächliche Fläche: <strong>${Math.round(payload.actual_technical_room_area_m2)} m²</strong></div>
+          <div class="summary-item"><span class="${badgeClass}">${htmlEscape(payload.best_match.status_label || '-')}</span> Abstand zum Bereich: <strong>${Math.round(payload.best_match.gap_to_range_m2 ?? 0)} m²</strong></div>
+          ${payload.best_match.raumvorschlag ? `<div class="summary-item">Raumvorschlag (fehlende Fläche, 2:1): <strong>${htmlEscape(payload.best_match.raumvorschlag)}</strong></div>` : ''}
+          <div class="summary-item">Studie 8.3 RLT zentral: <strong>${payload.study_rlt_central_selected ? 'ja' : 'nein'}</strong></div>
+          <div class="summary-item">Lüftung in Technikräumen gefunden: <strong>${payload.ventilation_detected ? 'ja' : 'nein'}</strong></div>
+        `;
+      } else {
+        bestMatch.innerHTML = '<div class="summary-item">Kein passendes VDI-Szenario aus den aktuellen IFC-Daten ermittelbar.</div>';
+      }
+
+      notes.innerHTML = (payload.notes || [])
+        .map(item => `<div class="summary-item">${htmlEscape(item)}</div>`)
+        .join('');
+
+      const scenarioRows = payload.scenario_rows || [];
+      renderScenarioCharts(bestChart, diagramGrid, scenarioRows, payload.best_match || null);
+      if (!scenarioRows.length) {
+        scenarioTable.innerHTML = '<tr><td>Keine Szenarienzeilen verfügbar.</td></tr>';
+      } else {
+        scenarioTable.innerHTML = `
+          <tr>
+            <td class="header">Szenario</td>
+            <td class="header">Erwartete Fläche</td>
+            <td class="header">Erwarteter Anteil</td>
+            <td class="header">Status</td>
+            <td class="header">Abstand</td>
+            <td class="header">Raumvorschlag (2:1)</td>
+            <td class="header">Hinweise</td>
+          </tr>
+          ${scenarioRows.map(item => {
+            const badgeClass = item.status_key === 'within'
+              ? 'status-badge status-within'
+              : item.status_key === 'below'
+                ? 'status-badge status-below'
+                : 'status-badge status-above';
+            return `
+              <tr>
+                <td>${htmlEscape(item.label)}</td>
+                <td>${Math.round(item.expected_lower_m2)} – ${Math.round(item.expected_upper_m2)} m²</td>
+                <td>${Math.round(item.expected_share_lower_pct * 10) / 10} – ${Math.round(item.expected_share_upper_pct * 10) / 10} %</td>
+                <td><span class="${badgeClass}">${htmlEscape(item.status_label)}</span></td>
+                <td>${Math.round(item.gap_to_range_m2)} m²</td>
+                <td>${item.raumvorschlag ? htmlEscape(item.raumvorschlag) : '–'}</td>
+                <td>${htmlEscape((item.notes || []).join(' | ') || '-')}</td>
+              </tr>
+            `;
+          }).join('')}
+        `;
+      }
+
+      const roomRows = payload.technical_rooms || [];
+      if (!roomRows.length) {
+        roomTable.innerHTML = '<tr><td>Keine Technikräume mit den konfigurierten Schlüsselwörtern erkannt.</td></tr>';
+      } else {
+        roomTable.innerHTML = `
+          <tr>
+            <td class="header">Raum</td>
+            <td class="header">Geschoss</td>
+            <td class="header">Approx. Fläche</td>
+            <td class="header">Gewerk</td>
+            <td class="header">Technik-Schlüsselwort</td>
+            <td class="header">Gewerk-Token</td>
+          </tr>
+          ${roomRows.map(item => `
+            <tr>
+              <td>${htmlEscape(item.label)}</td>
+              <td>${htmlEscape(item.floor_name || item.floor_index)}</td>
+              <td>${Math.round(item.area_m2)} m²</td>
+              <td>${htmlEscape(item.discipline_label)}</td>
+              <td>${htmlEscape((item.room_keyword_matches || []).join(', ') || '-')}</td>
+              <td>${htmlEscape((item.discipline_tokens || []).join(', ') || '-')}</td>
+            </tr>
+          `).join('')}
+        `;
+      }
+    }
+
+    function renderScenarioCharts(bestChart, diagramGrid, scenarioRows, bestMatch) {
+      if (!scenarioRows.length) {
+        bestChart.innerHTML = '<div class="diagram-empty">Keine Szenariokurven verfügbar.</div>';
+        diagramGrid.innerHTML = '';
+        return;
+      }
+
+      const activeBest = bestMatch || scenarioRows[0];
+      bestChart.innerHTML = createDiagramCard(activeBest, true);
+      diagramGrid.innerHTML = scenarioRows.map(item => createDiagramCard(item, false)).join('');
+    }
+
+    function createDiagramCard(item, isLarge) {
+      const badgeClass = item.status_key === 'within'
+        ? 'status-badge status-within'
+        : item.status_key === 'below'
+          ? 'status-badge status-below'
+          : 'status-badge status-above';
+      const note = item.chart?.x_was_clamped
+        ? '<div class="diagram-note">BGF liegt ausserhalb des digitalisierten x-Bereichs. Der Punkt wird am nächsten Diagrammrand angezeigt.</div>'
+        : '';
+      return `
+        <div class="diagram-card ${isLarge ? 'diagram-card-large' : ''}">
+          <div class="diagram-card-header">
+            <div>
+              <div class="diagram-title">${htmlEscape(item.label || '-')}</div>
+              <div class="small muted">Erwarteter Bereich bei Projekt-BGF: ${Math.round(item.expected_lower_m2)} – ${Math.round(item.expected_upper_m2)} m²</div>
+            </div>
+            <span class="${badgeClass}">${htmlEscape(item.status_label || '-')}</span>
+          </div>
+          ${buildDiagramSvg(item.chart || {}, item.status_key || 'within')}
+          <div class="diagram-legend">
+            <span><span class="legend-swatch legend-band"></span>VDI-Band</span>
+            <span><span class="legend-swatch legend-range"></span>Erwarteter Bereich bei Projekt-BGF</span>
+            <span><span class="legend-swatch legend-point"></span>Projektpunkt</span>
+          </div>
+          <div class="small muted">Projektpunkt: BGF ${htmlEscape(item.chart?.project_x_value ?? '-')} / Technikfläche ${htmlEscape(item.chart?.project_y_value ?? '-')} m²</div>
+          ${note}
+        </div>
+      `;
+    }
+
+    function buildDiagramSvg(chart, statusKey) {
+      const xValues = chart.x_values || [];
+      const lowerValues = chart.lower_values || [];
+      const upperValues = chart.upper_values || [];
+      if (!xValues.length || !lowerValues.length || !upperValues.length) {
+        return '<div class="diagram-empty">No diagram data available.</div>';
+      }
+
+      const width = 560;
+      const height = 260;
+      const padLeft = 56;
+      const padRight = 18;
+      const padTop = 16;
+      const padBottom = 38;
+      const xMin = Number(chart.x_min ?? Math.min(...xValues));
+      const xMax = Number(chart.x_max ?? Math.max(...xValues));
+      const yMin = Number(chart.y_min ?? 0);
+      const yMax = Number(chart.y_max ?? Math.max(...upperValues));
+      const plotWidth = width - padLeft - padRight;
+      const plotHeight = height - padTop - padBottom;
+      const safeXSpan = Math.max(xMax - xMin, 0.0001);
+      const safeYSpan = Math.max(yMax - yMin, 0.0001);
+
+      function sx(value) {
+        return padLeft + ((Number(value) - xMin) / safeXSpan) * plotWidth;
+      }
+
+      function sy(value) {
+        return padTop + plotHeight - ((Number(value) - yMin) / safeYSpan) * plotHeight;
+      }
+
+      function linePath(values) {
+        return values.map((value, index) => `${index === 0 ? 'M' : 'L'} ${sx(xValues[index]).toFixed(2)} ${sy(value).toFixed(2)}`).join(' ');
+      }
+
+      const bandPath = [
+        ...upperValues.map((value, index) => `${index === 0 ? 'M' : 'L'} ${sx(xValues[index]).toFixed(2)} ${sy(value).toFixed(2)}`),
+        ...lowerValues.slice().reverse().map((value, reverseIndex) => {
+          const index = lowerValues.length - 1 - reverseIndex;
+          return `L ${sx(xValues[index]).toFixed(2)} ${sy(value).toFixed(2)}`;
+        }),
+        'Z',
+      ].join(' ');
+
+      const projectedX = Number(chart.project_x_plot ?? chart.project_x_value ?? xValues[0]);
+      const projectedY = Number(chart.project_y_value ?? 0);
+      const expectedLower = Number(chart.expected_lower_m2 ?? 0);
+      const expectedUpper = Number(chart.expected_upper_m2 ?? 0);
+      const pointColor = statusKey === 'within' ? '#2e7d32' : statusKey === 'below' ? '#e65100' : '#b71c1c';
+
+      const xTicks = buildTicks(xMin, xMax, 4);
+      const yTicks = buildTicks(yMin, yMax, 4);
+
+      const xTickLines = xTicks.map(value => `
+        <g>
+          <line x1="${sx(value)}" y1="${height - padBottom}" x2="${sx(value)}" y2="${height - padBottom + 6}" stroke="#64748b" stroke-width="1" />
+          <text x="${sx(value)}" y="${height - 8}" font-size="11" text-anchor="middle" fill="#64748b">${formatNumber(value, 2)}</text>
+        </g>
+      `).join('');
+      const yTickLines = yTicks.map(value => `
+        <g>
+          <line x1="${padLeft - 6}" y1="${sy(value)}" x2="${padLeft}" y2="${sy(value)}" stroke="#64748b" stroke-width="1" />
+          <line x1="${padLeft}" y1="${sy(value)}" x2="${width - padRight}" y2="${sy(value)}" stroke="rgba(100, 116, 139, 0.2)" stroke-width="1" />
+          <text x="${padLeft - 10}" y="${sy(value) + 4}" font-size="11" text-anchor="end" fill="#64748b">${formatNumber(value, 0)}</text>
+        </g>
+      `).join('');
+
+      return `
+        <svg class="diagram-svg" viewBox="0 0 ${width} ${height}" aria-label="VDI diagram">
+          <rect x="0" y="0" width="${width}" height="${height}" fill="white"></rect>
+          ${yTickLines}
+          <line x1="${padLeft}" y1="${padTop}" x2="${padLeft}" y2="${height - padBottom}" stroke="#0f172a" stroke-width="1.2"></line>
+          <line x1="${padLeft}" y1="${height - padBottom}" x2="${width - padRight}" y2="${height - padBottom}" stroke="#0f172a" stroke-width="1.2"></line>
+          ${xTickLines}
+          <path d="${bandPath}" fill="rgba(13, 71, 161, 0.14)" stroke="rgba(13, 71, 161, 0.22)" stroke-width="1"></path>
+          <path d="${linePath(upperValues)}" fill="none" stroke="#0d47a1" stroke-width="2"></path>
+          <path d="${linePath(lowerValues)}" fill="none" stroke="#0d47a1" stroke-width="2"></path>
+          <line x1="${sx(projectedX)}" y1="${padTop}" x2="${sx(projectedX)}" y2="${height - padBottom}" stroke="rgba(15, 23, 42, 0.35)" stroke-dasharray="5 4" stroke-width="1.4"></line>
+          <line x1="${sx(projectedX)}" y1="${sy(expectedLower)}" x2="${sx(projectedX)}" y2="${sy(expectedUpper)}" stroke="#455a64" stroke-width="4"></line>
+          <circle cx="${sx(projectedX)}" cy="${sy(projectedY)}" r="5.5" fill="${pointColor}" stroke="white" stroke-width="2"></circle>
+          <text x="${padLeft}" y="12" font-size="11" fill="#64748b">${htmlEscape(chart.y_label || 'Technikfläche [m²]')}</text>
+          <text x="${width - padRight}" y="${height - 8}" font-size="11" text-anchor="end" fill="#64748b">${htmlEscape(chart.x_label || 'BGF [1000 m²]')}</text>
+        </svg>
+      `;
+    }
+
+    function buildTicks(minValue, maxValue, steps) {
+      if (Math.abs(maxValue - minValue) < 0.000001) {
+        return [minValue];
+      }
+      const ticks = [];
+      for (let index = 0; index <= steps; index += 1) {
+        ticks.push(minValue + ((maxValue - minValue) / steps) * index);
+      }
+      return ticks;
+    }
+
+    function formatNumber(value, digits) {
+      const number = Number(value);
+      if (!Number.isFinite(number)) {
+        return '-';
+      }
+      return number.toFixed(digits).replace(/\.0+$/, '').replace(/(\.\d*[1-9])0+$/, '$1');
+    }
+
+    function bindTableInteractions() {
+      document.querySelectorAll('td[data-coord]').forEach(cell => {
+        cell.addEventListener('click', async () => {
+          toggleSelection(cell.dataset.coord);
+          await persist();
+        });
+      });
+
+      document.querySelectorAll('select[data-weight-row]').forEach(select => {
+        select.addEventListener('change', async () => {
+          const row = select.dataset.weightRow;
+          const coord = `F${row}`;
+          if (!select.value) {
+            delete state.weights[coord];
+          } else {
+            state.weights[coord] = Number(select.value);
+          }
+          await persist();
+        });
+      });
+    }
+
+    function criterionFromCoord(coord) {
+      const row = Number(String(coord).replace(/^[A-Z]+/, ''));
+      const entry = state.tableRows.flat().find(cell => cell.row === row && cell.criterion);
+      return entry?.criterion || null;
+    }
+
+    function toggleSelection(coord) {
+      const criterion = criterionFromCoord(coord);
+      const row = Number(String(coord).replace(/^[A-Z]+/, ''));
+      const col = String(coord).replace(/[0-9]+$/, '');
+
+      if (state.selectedCoords.has(coord)) {
+        state.selectedCoords.delete(coord);
+        delete state.weights[`F${row}`];
+        return;
+      }
+
+      Array.from(state.selectedCoords).forEach(existing => {
+        const existingRow = Number(String(existing).replace(/^[A-Z]+/, ''));
+        const existingCriterion = criterionFromCoord(existing);
+        if (existingRow === row || existingCriterion === criterion && criterion <= 5) {
+          state.selectedCoords.delete(existing);
+          if (existingRow === row) {
+            delete state.weights[`F${existingRow}`];
+          }
+        }
+        if (existingRow === row && String(existing).replace(/[0-9]+$/, '') !== col) {
+          state.selectedCoords.delete(existing);
+        }
+      });
+
+      const selectedInCriterion = Array.from(state.selectedCoords).filter(item => criterionFromCoord(item) === criterion);
+      if (criterion >= 6 && selectedInCriterion.length >= 3) {
+        return;
+      }
+
+      state.selectedCoords.add(coord);
+    }
+
+    async function persist() {
+      const response = await fetch('/api/studie/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          selected_coords: Array.from(state.selectedCoords),
+          weights: state.weights,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        alert(data.message || 'Studie-Zustand konnte nicht gespeichert werden.');
+        await loadPage();
+        return;
+      }
+      state.selectedCoords = new Set(data.payload.state?.selected_coords || []);
+      state.weights = data.payload.state?.weights || {};
+      state.tableRows = data.payload.table_rows || [];
+      render(data.payload);
+    }
+
+    document.getElementById('autofill-button').addEventListener('click', async () => {
+      const response = await fetch('/api/studie/autofill', { method: 'POST' });
+      const data = await response.json();
+      if (!response.ok) {
+        alert(data.message || 'Auto-Befüllung fehlgeschlagen.');
+        return;
+      }
+      state.selectedCoords = new Set(data.payload.state?.selected_coords || []);
+      state.weights = data.payload.state?.weights || {};
+      state.tableRows = data.payload.table_rows || [];
+      render(data.payload);
+    });
+
+    loadPage();
+  </script>
+</body>
+</html>
